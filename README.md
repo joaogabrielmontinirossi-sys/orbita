@@ -12,6 +12,8 @@ No app de Windows, o botão **Sincronização** grava o arquivo `orbita-sync.jso
 
 No site e no celular os dados ficam no navegador daquele aparelho. Para levá-los a outro aparelho, use **Exportar** (gera um arquivo `orbita-AAAA-MM-DD.json`; no celular abre o menu de compartilhar) e, no outro, **Importar**. A importação mescla com o que já existe: fica a versão mais recente de cada tarefa e rotina.
 
+O botão **PDF** gera um resumo para quem não tem o app: os círculos com as tarefas numeradas, as listas de cada anel com notas e prazos, e a tabela de rotinas por dia da semana.
+
 ## Código
 
 - `index.html`, `sw.js`, `manifest.webmanifest`, `icons/`: o site publicado.
