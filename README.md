@@ -6,6 +6,10 @@ Tarefas e rotinas em círculos concêntricos: o centro é o que importa agora, e
 - **Celular:** abra o site no navegador do celular e escolha "Adicionar à tela inicial" (Android: menu ⋮ do Chrome; iPhone: botão Compartilhar do Safari). Funciona sem internet depois da primeira abertura.
 - **Windows:** baixe o `Orbita.exe` na página de [Releases](https://github.com/joaogabrielmontinirossi-sys/orbita/releases). Ele abre o app numa janela própria e usa o Microsoft Edge que já vem no Windows.
 
+## Personalização dos anéis
+
+Amplie um anel e toque em **Personalizar anel** para mudar o nome, a descrição e a cor, criar um anel novo depois dele ou removê-lo (de 2 a 6 anéis). No centro também dá para escolher quantas tarefas cabem (de 1 a 5). A personalização acompanha a sincronização, a exportação e o PDF.
+
 ## Sincronização
 
 No app de Windows, o botão **Sincronização** grava o arquivo `orbita-sync.json` numa pasta do Google Drive a cada alteração. Outro computador com o Órbita e o mesmo Drive recebe tudo automaticamente; alterações feitas nos dois lados são mescladas item por item.
