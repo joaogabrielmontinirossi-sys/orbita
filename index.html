@@ -176,7 +176,12 @@ form.add input[type=time]{flex:0 1 120px}
       <button id="tab-circles" data-act="view" data-v="circles">Círculos</button>
       <button id="tab-cal" data-act="view" data-v="cal">Calendário</button>
     </div>
-    <button class="btn" id="syncbtn" data-act="synctoggle" hidden>Sincronização</button>
+    <div class="btns" id="filebtns">
+      <button class="btn" id="expbtn" data-act="export">Exportar</button>
+      <button class="btn" id="impbtn" data-act="import">Importar</button>
+      <input type="file" id="imp" accept=".json,application/json" hidden>
+      <button class="btn" id="syncbtn" data-act="synctoggle" hidden>Sincronização</button>
+    </div>
     <div class="status" id="status" aria-live="polite">Salvo neste navegador</div>
   </header>
 
@@ -351,6 +356,33 @@ function mergeRemote(remote){
   inRing(0).slice(MAXC).forEach(function(t){t.ring=1}); // dois aparelhos podem ter enchido o centro ao mesmo tempo
   return n;
 }
+/* ---------- exportar e importar arquivo: leva os dados de um aparelho a outro sem servidor ---------- */
+function exportData(){return JSON.stringify({app:"orbita",version:1,exported:Date.now(),tasks:state.tasks,routines:state.routines,log:state.log,logMod:state.logMod,tomb:state.tomb})}
+async function doExport(){
+  stamp();
+  var name="orbita-"+today()+".json",text=exportData();
+  try{ // no celular, abre o menu de compartilhar (salvar no Drive, enviar para si mesmo…)
+    var f=new File([text],name,{type:"application/json"});
+    if(window.matchMedia&&matchMedia("(pointer:coarse)").matches&&navigator.canShare&&navigator.canShare({files:[f]})){await navigator.share({files:[f],title:"Órbita"});return}
+  }catch(e){if(e&&e.name==="AbortError")return}
+  var url=URL.createObjectURL(new Blob([text],{type:"application/json"})),a=document.createElement("a");
+  a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();
+  setTimeout(function(){URL.revokeObjectURL(url)},10000);
+  toast("Arquivo "+name+" salvo nos downloads.");
+}
+function importText(text){
+  var d;
+  try{d=JSON.parse(text)}catch(e){d=null}
+  if(!d||d.app!=="orbita"||!Array.isArray(d.tasks)){toast("Este arquivo não é um backup do Órbita.");return}
+  if(state.examples){ // quem só tem os exemplos fica com o conteúdo do arquivo
+    state.tasks=state.tasks.filter(function(x){return !x.ex});state.routines=state.routines.filter(function(x){return !x.ex});state.examples=false;
+  }
+  var n=mergeRemote(d);
+  snapshot();persist();if(Sync.on)syncSoon();
+  ui.open=null;ui.openR=null;renderAll();
+  toast(n?"Importado: "+n+(n===1?" item novo ou atualizado.":" itens novos ou atualizados."):"Importado: este aparelho já tinha tudo o que está no arquivo.");
+}
+
 async function syncNow(manual){
   if(!Sync.on)return;
   if(Sync.busy){Sync.again=true;return}
@@ -679,6 +711,8 @@ document.addEventListener("click",function(e){
   var el=e.target.closest("[data-act]"); if(!el)return;
   var a=el.dataset.act,id=el.dataset.id,t,r;
   if(a==="view"){ui.view=el.dataset.v;ui.open=null;ui.openR=null;renderAll()}
+  else if(a==="export"){doExport()}
+  else if(a==="import"){$("imp").click()}
   else if(a==="synctoggle"){Sync.show=!Sync.show;drawSync()}
   else if(a==="syncnow"){syncNow(true)}
   else if(a==="syncoff"){syncConfig("sync/config","off")}
@@ -737,6 +771,12 @@ function onField(e,final){
 }
 document.addEventListener("input",function(e){onField(e,false)});
 document.addEventListener("change",function(e){onField(e,true)});
+$("imp").addEventListener("change",function(){
+  var f=this.files&&this.files[0],inp=this; if(!f)return;
+  f.text().then(importText,function(){toast("Não foi possível ler o arquivo.")}).then(function(){inp.value=""});
+});
+// dentro do Claude a página não pode salvar arquivos; lá os dados já ficam na conta
+if(window.claude){$("expbtn").hidden=true;$("impbtn").hidden=true}
 setInterval(function(){if(ui.view==="cal"&&!document.hidden)drawCal()},60000);
 
 snapshot();
