@@ -19,17 +19,18 @@
    Cor = distância do centro: brasa no agora, esfriando até o azul do que pode esperar. */
 :root{
   --bg:#EDF0F3; --surface:#F9FBFC; --ink:#16202B; --muted:#5A6876; --line:#D2D9E0;
-  --r0:#DD4F27; --r1:#D9921F; --r2:#23917F; --r3:#566FB3; --on-accent:#FFFFFF;
+  --r0:#DD4F27; --r1:#D9921F; --r2:#23917F; --r3:#566FB3; --r4:#8A5BC2; --r5:#C8477F; --on-accent:#FFFFFF;
   --display:"Unbounded","Trebuchet MS",system-ui,sans-serif;
   --body:"Onest",system-ui,-apple-system,"Segoe UI",sans-serif;
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
   --bg:#0E151C; --surface:#18222C; --ink:#E7ECF1; --muted:#95A3B1; --line:#2B3744;
-  --r0:#FF7A4F; --r1:#F2B552; --r2:#4CC2B1; --r3:#8CA4E6; --on-accent:#1B0D06; color-scheme:dark}}
+  --r0:#FF7A4F; --r1:#F2B552; --r2:#4CC2B1; --r3:#8CA4E6; --r4:#B693EA; --r5:#EE86B0; --on-accent:#1B0D06; color-scheme:dark}}
 :root[data-theme="dark"]{
   --bg:#0E151C; --surface:#18222C; --ink:#E7ECF1; --muted:#95A3B1; --line:#2B3744;
-  --r0:#FF7A4F; --r1:#F2B552; --r2:#4CC2B1; --r3:#8CA4E6; --on-accent:#1B0D06; color-scheme:dark}
+  --r0:#FF7A4F; --r1:#F2B552; --r2:#4CC2B1; --r3:#8CA4E6; --r4:#B693EA; --r5:#EE86B0; --on-accent:#1B0D06; color-scheme:dark}
 
+:root{--g0:var(--r0);--g1:var(--r1);--g2:var(--r2);--g3:var(--r3);--g4:var(--r4);--g5:var(--r5)}
 *{box-sizing:border-box}
 body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.45}
 button,input,textarea{font:inherit;color:inherit}
@@ -68,16 +69,18 @@ button{cursor:pointer}
 
 /* anéis */
 .band{stroke:var(--bg);stroke-width:4;cursor:pointer}
-.b0{fill:color-mix(in srgb,var(--r0) 30%,var(--surface))}
-.b1{fill:color-mix(in srgb,var(--r1) 24%,var(--surface))}
-.b2{fill:color-mix(in srgb,var(--r2) 18%,var(--surface))}
-.b3{fill:color-mix(in srgb,var(--r3) 14%,var(--surface))}
-.band.on.b0{stroke:var(--r0)} .band.on.b1{stroke:var(--r1)} .band.on.b2{stroke:var(--r2)} .band.on.b3{stroke:var(--r3)}
+.b0{fill:color-mix(in srgb,var(--g0) 30%,var(--surface))}
+.b1{fill:color-mix(in srgb,var(--g1) 24%,var(--surface))}
+.b2{fill:color-mix(in srgb,var(--g2) 18%,var(--surface))}
+.b3{fill:color-mix(in srgb,var(--g3) 14%,var(--surface))}
+.b4{fill:color-mix(in srgb,var(--g4) 12%,var(--surface))}
+.b5{fill:color-mix(in srgb,var(--g5) 10%,var(--surface))}
+.band.on.b0{stroke:var(--g0)} .band.on.b1{stroke:var(--g1)} .band.on.b2{stroke:var(--g2)} .band.on.b3{stroke:var(--g3)} .band.on.b4{stroke:var(--g4)} .band.on.b5{stroke:var(--g5)}
 .rlab{font:600 14px var(--body);letter-spacing:.14em;fill:var(--ink);pointer-events:none;text-transform:uppercase}
 .empty{font:500 17px var(--body);fill:var(--muted);pointer-events:none;text-anchor:middle}
 .bub{cursor:pointer}
 .bub circle.c{fill:var(--surface);stroke-width:3}
-.bub.k0 circle.c{stroke:var(--r0)} .bub.k1 circle.c{stroke:var(--r1)} .bub.k2 circle.c{stroke:var(--r2)} .bub.k3 circle.c{stroke:var(--r3)}
+.bub.k0 circle.c{stroke:var(--g0)} .bub.k1 circle.c{stroke:var(--g1)} .bub.k2 circle.c{stroke:var(--g2)} .bub.k3 circle.c{stroke:var(--g3)} .bub.k4 circle.c{stroke:var(--g4)} .bub.k5 circle.c{stroke:var(--g5)}
 .bub.sel circle.c{stroke-width:7}
 .bub:hover circle.c{fill:var(--bg)}
 .bub text{fill:var(--ink);font-family:var(--body);font-weight:500;text-anchor:middle;dominant-baseline:central;pointer-events:none}
@@ -120,7 +123,11 @@ button{cursor:pointer}
 .sec{border-top:1px solid var(--line);padding-top:12px;display:flex;flex-direction:column;gap:10px;min-width:0}
 .sechead{display:flex;align-items:center;gap:10px;width:100%;border:0;background:none;padding:2px 0;text-align:left}
 .dot{width:14px;height:14px;border-radius:50%;flex:none}
-.dot.k0{background:var(--r0)} .dot.k1{background:var(--r1)} .dot.k2{background:var(--r2)} .dot.k3{background:var(--r3)}
+.dot.k0{background:var(--g0)} .dot.k1{background:var(--g1)} .dot.k2{background:var(--g2)} .dot.k3{background:var(--g3)} .dot.k4{background:var(--g4)} .dot.k5{background:var(--g5)}
+.sw{width:28px;height:28px;border-radius:50%;border:3px solid var(--surface);outline:1px solid var(--line);padding:0}
+.sw[aria-pressed="true"]{outline:2px solid var(--ink)}
+.step{display:flex;align-items:center;gap:10px;font-variant-numeric:tabular-nums}
+.lab{font-size:12px;color:var(--muted);margin:0}
 .sechead b{font-family:var(--display);font-weight:500;font-size:15px}
 .count{color:var(--muted);font-variant-numeric:tabular-nums;font-size:13px}
 .zoom{margin-left:auto;color:var(--muted);font-size:13px}
@@ -202,13 +209,33 @@ form.add input[type=time]{flex:0 1 120px}
 <script>
 (function(){
 "use strict";
-var RINGS=[
-  {name:"Agora",desc:"O que importa neste momento. Cabem no máximo 3 tarefas."},
-  {name:"Hoje",desc:"Ainda hoje, depois do que está no centro."},
-  {name:"Esta semana",desc:"Tem prazo, mas não é para hoje."},
-  {name:"Pode esperar",desc:"Sem pressa. Fica aqui até fazer sentido trazer para perto."}
+var DEF_RINGS=[
+  {name:"Agora",desc:"O que importa neste momento.",color:0},
+  {name:"Hoje",desc:"Ainda hoje, depois do que está no centro.",color:1},
+  {name:"Esta semana",desc:"Tem prazo, mas não é para hoje.",color:2},
+  {name:"Pode esperar",desc:"Sem pressa. Fica aqui até fazer sentido trazer para perto.",color:3}
 ];
-var MAXC=3, KEY="orbita-v1";
+// cores que um anel pode ter: no app vêm dos tokens --r0…--r5 (claro e escuro); no PDF, destes valores
+var PALHEX=["#DD4F27","#D9921F","#23917F","#566FB3","#8A5BC2","#C8477F"],PALNAME=["Brasa","Âmbar","Verde-água","Azul","Violeta","Rosa"];
+var RINGS=DEF_RINGS,MAXC=3,N=4,BASE=[130,107,107,106],KEY="orbita-v1";
+function cleanRings(a){
+  if(!Array.isArray(a)||a.length<2)return null;
+  return a.slice(0,6).map(function(r){r=r||{};return {name:String(r.name||"").slice(0,24),desc:String(r.desc||"").slice(0,120),color:Math.max(0,Math.min(5,r.color|0))}});
+}
+function rname(i){return (RINGS[i]&&RINGS[i].name.trim())||("Anel "+(i+1))}
+// recalcula tudo o que depende da configuração dos anéis; chamar sempre que o estado ou os anéis mudarem
+function useState(){
+  RINGS=state.rings;MAXC=state.maxc;N=RINGS.length;
+  var c=N<=3?160:130;BASE=RINGS.map(function(_,i){return i?(450-c)/(N-1):c});
+  state.tasks.forEach(function(t){t.ring=Math.max(0,Math.min(N-1,t.ring|0))});
+  for(var i=0;i<6;i++)document.documentElement.style.setProperty("--g"+i,"var(--r"+(RINGS[i]?RINGS[i].color:i)+")");
+}
+function centerPos(k,j,R){ // onde fica a j-ésima de k tarefas dentro do disco central de raio R: [x, y, raio]
+  if(k===1)return [0,R*.1,Math.min(R*.5,90)];
+  if(k===2)return [(j?1:-1)*R*.44,R*.12,R*.37];
+  var p=pol(R*.5,90+(k%2?0:180/k)+j*360/k);
+  return [p[0],p[1]+R*.06,Math.min(R*.33,R*.5*Math.sin(Math.PI/k)*.88)];
+}
 var MES=["janeiro","fevereiro","março","abril","maio","junho","julho","agosto","setembro","outubro","novembro","dezembro"];
 var MES3=["jan","fev","mar","abr","mai","jun","jul","ago","set","out","nov","dez"];
 var DIA=["domingo","segunda-feira","terça-feira","quarta-feira","quinta-feira","sexta-feira","sábado"];
@@ -261,6 +288,9 @@ function normalize(s){
   s.log=s.log&&typeof s.log==="object"?s.log:{};
   s.tomb=s.tomb&&typeof s.tomb==="object"?s.tomb:{};
   s.logMod=s.logMod&&typeof s.logMod==="object"?s.logMod:{};
+  s.rings=cleanRings(s.rings)||JSON.parse(JSON.stringify(DEF_RINGS));
+  s.maxc=Math.max(1,Math.min(5,(s.maxc|0)||3));
+  s.cfgMod=+s.cfgMod||0;
   var lim=iso(addDays(new Date(),-60));
   Object.keys(s.log).forEach(function(k){if(k<lim)delete s.log[k]});
   return s;
@@ -268,6 +298,7 @@ function normalize(s){
 var state, hadLocal=false;
 try{var raw=localStorage.getItem(KEY);if(raw){state=normalize(JSON.parse(raw));hadLocal=true}}catch(e){}
 if(!state)state=normalize(sample());
+useState();
 
 var now=new Date();
 var ui={view:"circles",focus:null,open:null,openR:null,cal:{y:now.getFullYear(),m:now.getMonth(),sel:today()}};
@@ -284,6 +315,7 @@ function snapshot(){
   state.tasks.forEach(function(t){prev["t:"+t.id]=sig(t)});
   state.routines.forEach(function(r){prev["r:"+r.id]=sig(r)});
   Object.keys(state.log).forEach(function(d){prev["l:"+d]=JSON.stringify(state.log[d])});
+  prev.cfg=JSON.stringify([state.rings,state.maxc]);
 }
 function stamp(){
   var nowTs=Date.now(),seen={};
@@ -291,6 +323,7 @@ function stamp(){
   state.tasks.forEach(function(t){one("t",t)});
   state.routines.forEach(function(r){one("r",r)});
   Object.keys(state.log).forEach(function(d){var k="l:"+d,s=JSON.stringify(state.log[d]);seen[k]=1;if(prev[k]!==s){state.logMod[d]=nowTs;prev[k]=s}});
+  var cs=JSON.stringify([state.rings,state.maxc]);seen.cfg=1;if(prev.cfg!==cs){state.cfgMod=nowTs;prev.cfg=cs}
   Object.keys(prev).forEach(function(k){if(!seen[k]){if(k.charAt(0)!=="l")state.tomb[k]=nowTs;delete prev[k]}});
 }
 function baseStatus(){
@@ -318,7 +351,7 @@ var RE_DATE=/^\d{4}-\d\d-\d\d$/;
 function okId(x){return typeof x==="string"&&/^[\w-]{1,40}$/.test(x)}
 function cleanT(o){
   if(!o||!okId(o.id))return null;
-  var t={id:o.id,title:String(o.title||""),notes:String(o.notes||""),ring:Math.max(0,Math.min(3,o.ring|0)),due:RE_DATE.test(o.due)?o.due:"",done:!!o.done,doneAt:+o.doneAt||0,mod:+o.mod||0};
+  var t={id:o.id,title:String(o.title||""),notes:String(o.notes||""),ring:Math.max(0,Math.min(5,o.ring|0)),due:RE_DATE.test(o.due)?o.due:"",done:!!o.done,doneAt:+o.doneAt||0,mod:+o.mod||0};
   if(o.ex)t.ex=true; return t;
 }
 function cleanR(o){
@@ -330,7 +363,7 @@ function cleanR(o){
 function syncSig(d){
   function ids(a){return (a||[]).map(function(o){return o.id+":"+(o.mod||0)}).sort().join(",")}
   var lm=d.logMod||{};
-  return ids(d.tasks)+"|"+ids(d.routines)+"|"+Object.keys(d.tomb||{}).sort().join(",")+"|"+Object.keys(lm).sort().map(function(k){return k+":"+lm[k]}).join(",");
+  return ids(d.tasks)+"|"+ids(d.routines)+"|"+Object.keys(d.tomb||{}).sort().join(",")+"|"+Object.keys(lm).sort().map(function(k){return k+":"+lm[k]}).join(",")+"|"+(+d.cfgMod||0);
 }
 function mergeRemote(remote){
   var n=0,tomb=state.tomb,lists={t:state.tasks,r:state.routines};
@@ -354,11 +387,16 @@ function mergeRemote(remote){
     if(!RE_DATE.test(d)||!Array.isArray(rl[d]))return;
     var m=+rm[d]||0; if(m>(state.logMod[d]||0)){state.log[d]=rl[d].filter(okId);state.logMod[d]=m;n++}
   });
+  var rr=cleanRings(remote.rings); // a personalização dos anéis viaja junto: vale a mais recente
+  if(rr&&(+remote.cfgMod||0)>(state.cfgMod||0)){state.rings=rr;state.maxc=Math.max(1,Math.min(5,(remote.maxc|0)||3));state.cfgMod=+remote.cfgMod;n++}
+  useState();
+  if(ui.focus!==null)ui.focus=Math.min(ui.focus,N-1);
+  ui.custom=null;
   inRing(0).slice(MAXC).forEach(function(t){t.ring=1}); // dois aparelhos podem ter enchido o centro ao mesmo tempo
   return n;
 }
 /* ---------- exportar e importar arquivo: leva os dados de um aparelho a outro sem servidor ---------- */
-function exportData(){return JSON.stringify({app:"orbita",version:1,exported:Date.now(),tasks:state.tasks,routines:state.routines,log:state.log,logMod:state.logMod,tomb:state.tomb})}
+function exportData(){return JSON.stringify({app:"orbita",version:1,exported:Date.now(),tasks:state.tasks,routines:state.routines,log:state.log,logMod:state.logMod,tomb:state.tomb,rings:state.rings,maxc:state.maxc,cfgMod:state.cfgMod})}
 async function deliver(name,data,type){
   if(window.claude&&window.claude.use){ // dentro do Claude, quem salva é a plataforma, com confirmação
     var dl=null; try{dl=await window.claude.use("downloads")}catch(e){}
@@ -425,7 +463,7 @@ function wrapW(s,maxW,size,bold,maxLines){
   return lines;
 }
 function makePdf(){
-  var W=595.28,H=841.89,M=48,INK="#16202B",MUT="#5A6876",LINE="#D2D9E0",RC=["#DD4F27","#D9921F","#23917F","#566FB3"];
+  var W=595.28,H=841.89,M=48,INK="#16202B",MUT="#5A6876",LINE="#D2D9E0",HOT=PALHEX[0];
   var pages=[],ops,y;
   function n(v){return String(Math.round(v*100)/100)}
   function rgb(hex){var v=parseInt(hex.slice(1),16);return [(v>>16)/255,(v>>8&255)/255,(v&255)/255]}
@@ -449,7 +487,7 @@ function makePdf(){
   function need(h){if(y+h>H-58)newPage()}
   function dueLabel(s){var d=parse(s),k=dayDiff(s),base=d.getDate()+" "+MES3[d.getMonth()];return k<0?"atrasada · "+base:k===0?"hoje · "+base:k===1?"amanhã · "+base:base}
 
-  var rings=[0,1,2,3].map(inRing),num={},count=0,td=new Date();
+  var rings=RINGS.map(function(_,k){return inRing(k)}),RC=RINGS.map(function(r){return PALHEX[r.color]}),num={},count=0,td=new Date();
   rings.forEach(function(l){l.forEach(function(t){num[t.id]=++count})});
 
   // cabeçalho com a logo
@@ -459,7 +497,7 @@ function makePdf(){
     circle(lx,ly,r[0],null,r[2],r[1]);
     var p=pol(r[0],r[3]);circle(lx+p[0],ly+p[1],r[4]+1,"#FFFFFF");circle(lx+p[0],ly+p[1],r[4],r[2]);
   });
-  circle(lx,ly,3.2,RC[0]);
+  circle(lx,ly,3.2,HOT);
   text(M+44,71,"Órbita",23,true);
   text(M+44,85,"O centro é o agora. O resto pode esperar.",9.5,false,MUT);
   text(W-M,66,td.getDate()+" de "+MES[td.getMonth()]+" de "+td.getFullYear(),10.5,true,INK,"r");
@@ -468,18 +506,16 @@ function makePdf(){
 
   // os círculos, com cada tarefa numerada
   var R=150,cx=W/2,cy=102+26+R,b=[],acc=0,i;
-  for(i=0;i<4;i++){acc+=BASE[i]/450*R;b.push(acc)}
-  for(i=3;i>=0;i--)circle(cx,cy,b[i],tint(RC[i],[.3,.24,.18,.14][i]),"#FFFFFF",1.6);
-  for(i=0;i<4;i++)text(cx,cy-b[i]+(i?10.5:11.5),(RINGS[i].name+(i?" · "+rings[i].length:"")).toUpperCase(),i?6.2:5.6,true,INK,"c",.7);
+  for(i=0;i<N;i++){acc+=BASE[i]/450*R;b.push(acc)}
+  for(i=N-1;i>=0;i--)circle(cx,cy,b[i],tint(RC[i],[.3,.24,.18,.14,.12,.1][i]),"#FFFFFF",1.6);
+  for(i=0;i<N;i++)text(cx,cy-b[i]+(i?10.5:11.5),wrapW((rname(i)+(i?" · "+rings[i].length:"")).toUpperCase(),i?999:b[0]*1.25,i?6.2:5.6,true,1)[0],i?6.2:5.6,true,INK,"c",.7,true);
   function dot(t,x,yy,r,k){
     circle(x,yy,r,"#FFFFFF",RC[k],1.2);
     if(r>=5){var s=r>=7?7:5.6;text(x,yy+s*.36,String(num[t.id]),s,true,INK,"c")}
   }
   var c=rings[0],r0=b[0];
-  if(c.length===1)dot(c[0],cx,cy+5,8,0);
-  else if(c.length===2){dot(c[0],cx-r0*.42,cy+5,8,0);dot(c[1],cx+r0*.42,cy+5,8,0)}
-  else c.slice(0,3).forEach(function(t,j){var p=pol(r0*.5,[90,205,335][j]);dot(t,cx+p[0],cy+p[1]+4,7.5,0)});
-  for(i=1;i<4;i++){
+  c.forEach(function(t,j){var p=centerPos(c.length,j,r0);dot(t,cx+p[0],cy+p[1]+1,Math.max(4,Math.min(8,p[2]*.62)),0)});
+  for(i=1;i<N;i++){
     var ts=rings[i],q=ts.length,mid=b[i]-(b[i]-b[i-1])/2,rr=Math.max(2.5,Math.min(8,mid*5.236/Math.max(q,1)/2*.88));
     ts.forEach(function(t,j){var p=pol(mid,-60+300*(j+.5)/q);dot(t,cx+p[0],cy+p[1],rr,i)});
   }
@@ -487,10 +523,10 @@ function makePdf(){
 
   // as listas, do centro para fora
   var TW=W-2*M-28-96;
-  for(i=0;i<4;i++){
+  for(i=0;i<N;i++){
     need(58);
     circle(M+5,y-4.3,5,RC[i]);
-    var hw=text(M+18,y,RINGS[i].name,13,true);
+    var hw=text(M+18,y,rname(i),13,true);
     text(M+26+hw,y,rings[i].length+(rings[i].length===1?" tarefa":" tarefas"),9,false,MUT);
     y+=9;rule(y);y+=18;
     if(!rings[i].length){text(M+18,y,"Nada aqui por enquanto.",9.5,false,MUT);y+=16}
@@ -499,7 +535,7 @@ function makePdf(){
       need(tl.length*13.5+nl.length*11+8);
       circle(M+8,y-3.6,7,"#FFFFFF",RC[i],1.1);
       text(M+8,y-1.1,String(num[t.id]),7,true,INK,"c");
-      if(t.due){var hot=dayDiff(t.due)<=0;text(W-M,y,dueLabel(t.due),9,hot,hot?RC[0]:MUT,"r")}
+      if(t.due){var hot=dayDiff(t.due)<=0;text(W-M,y,dueLabel(t.due),9,hot,hot?HOT:MUT,"r")}
       tl.forEach(function(l){text(M+26,y,l,10.5,false,INK,"l",0,true);y+=13.5});
       nl.forEach(function(l){text(M+26,y-1,l,8.5,false,MUT,"l",0,true);y+=11});
       y+=6;
@@ -520,7 +556,7 @@ function makePdf(){
       var st=toMin(r.start);
       text(M,y,r.start+"–"+hm(st+(+r.dur||0)),9.5,false,MUT);
       text(M+84,y,wrapW(r.title||"(sem título)",W-2*M-84-136,10.5,false,1)[0]||"",10.5,false,INK,"l",0,true);
-      for(var d=0;d<7;d++){if(r.days.indexOf(d)>=0)circle(dx(d),y-3.5,4.2,RC[2]);else circle(dx(d),y-3.5,3.8,null,LINE,.9)}
+      for(var d=0;d<7;d++){if(r.days.indexOf(d)>=0)circle(dx(d),y-3.5,4.2,PALHEX[2]);else circle(dx(d),y-3.5,3.8,null,LINE,.9)}
       y+=19;
     });
   }
@@ -583,9 +619,9 @@ async function syncNow(manual){
     }
     state.syncedOnce=true;
     if(pulled){snapshot();stamp();persist()}
-    var local={app:"orbita",version:1,exported:Date.now(),tasks:state.tasks,routines:state.routines,log:state.log,logMod:state.logMod,tomb:state.tomb};
+    var localText=exportData(),local=JSON.parse(localText);
     if(!remote||syncSig(remote)!==syncSig(local)){
-      var w=await api("sync",{method:"POST",body:JSON.stringify(local)});
+      var w=await api("sync",{method:"POST",body:localText});
       if(!w.ok)throw new Error("não foi possível gravar na pasta");
     }
     Sync.last=Date.now();Sync.error="";
@@ -593,6 +629,7 @@ async function syncNow(manual){
       if(ui.open&&!task(ui.open))ui.open=null;
       if(ui.openR&&!routine(ui.openR))ui.openR=null;
       var ae=document.activeElement,typing=ae&&$("panel").contains(ae)&&/^(INPUT|TEXTAREA)$/.test(ae.tagName);
+      if(ui.view==="circles")cur=targetW();
       drawStage(); if(!typing)drawPanel();
     }
     if(manual)toast(pulled?"Sincronizado: havia novidades no Drive.":"Sincronizado com o Google Drive.");
@@ -652,7 +689,7 @@ async function connect(){
     store.doc=doc;
     if(snap.exists){
       var d=snap.data();
-      if(!hadLocal||(d.updatedAt||0)>=(state.updatedAt||0)){state=normalize(JSON.parse(JSON.stringify(d)));ui.open=null;ui.openR=null;snapshot();renderAll()}
+      if(!hadLocal||(d.updatedAt||0)>=(state.updatedAt||0)){state=normalize(JSON.parse(JSON.stringify(d)));useState();ui.open=null;ui.openR=null;ui.custom=null;if(ui.focus!==null)ui.focus=Math.min(ui.focus,N-1);snapshot();renderAll()}
       else flush();
     }else if(hadLocal&&state.updatedAt)flush();
     setStatus("Salvo na sua conta");
@@ -674,12 +711,12 @@ function addTask(title,ring,due){
 }
 function move(id,dir){
   var t=task(id); if(!t)return;
-  var nr=Math.max(0,Math.min(3,t.ring+dir)); if(nr===t.ring)return;
+  var nr=Math.max(0,Math.min(N-1,t.ring+dir)); if(nr===t.ring)return;
   if(nr===0&&centerFull()){toast("O centro já tem "+MAXC+" tarefas. Conclua ou afaste uma antes.");return}
   t.ring=nr; save();
   if(ui.view==="circles"&&ui.focus!==null)setFocus(nr,true); else renderAll();
 }
-function ringForDue(due){var n=dayDiff(due);return n<=0?1:n<=7?2:3}
+function ringForDue(due){var n=dayDiff(due);return Math.min(N-1,n<=0?1:n<=7?2:3)}
 
 /* ---------- geometria ---------- */
 function pol(r,a){var t=a*Math.PI/180;return [r*Math.cos(t),r*Math.sin(t)]}
@@ -708,17 +745,17 @@ function bubble(t,x,y,r,k){
 }
 
 /* ---------- vista: círculos ---------- */
-var BASE=[130,107,107,106], cur=BASE.slice(), anim=null;
-function targetW(){if(ui.focus===null)return BASE.slice();return [0,1,2,3].map(function(i){return i===ui.focus?300:50})}
+var cur=BASE.slice(), anim=null;
+function targetW(){if(ui.focus===null)return BASE.slice();return RINGS.map(function(_,i){return i===ui.focus?300:150/(N-1)})}
 function drawCircles(w){
   var b=[],acc=0,i,s="";
-  for(i=0;i<4;i++){acc+=w[i];b.push(acc)}
-  for(i=3;i>=0;i--)s+='<circle class="band b'+i+(ui.focus===i?" on":"")+'" data-act="focus" data-ring="'+i+'" r="'+b[i].toFixed(1)+'"><title>'+RINGS[i].name+"</title></circle>";
+  for(i=0;i<N;i++){acc+=w[i];b.push(acc)}
+  for(i=N-1;i>=0;i--)s+='<circle class="band b'+i+(ui.focus===i?" on":"")+'" data-act="focus" data-ring="'+i+'" r="'+b[i].toFixed(1)+'"><title>'+esc(rname(i))+"</title></circle>";
   s+="<defs>";
   var labs=[];
-  for(i=0;i<4;i++){
-    var rr=b[i]-22, list=inRing(i), full=RINGS[i].name+" · "+list.length, len=rr*2.09;
-    var txt=full.length*11<len?full:(RINGS[i].name.length*11<len?RINGS[i].name:"");
+  for(i=0;i<N;i++){
+    var rr=b[i]-22, list=inRing(i), nm=rname(i), full=nm+" · "+list.length, len=rr*2.09;
+    var txt=full.length*11<len?full:(nm.length*11<len?nm:"");
     if(txt&&rr>20){s+='<path id="lab'+i+'" d="M'+P(rr,-150)+"A"+rr.toFixed(1)+" "+rr.toFixed(1)+" 0 0 1 "+P(rr,-30)+'"/>';labs.push([i,txt])}
   }
   s+="</defs>";
@@ -726,11 +763,9 @@ function drawCircles(w){
   // centro
   var c=inRing(0),R=b[0];
   if(!c.length){if(R>100)s+='<text class="empty" y="6">Centro livre</text><text class="empty" y="30" font-size="14">traga uma tarefa para cá</text>'}
-  else if(c.length===1)s+=bubble(c[0],0,R*.1,Math.min(R*.5,90),0);
-  else if(c.length===2){s+=bubble(c[0],-R*.44,R*.12,R*.37,0)+bubble(c[1],R*.44,R*.12,R*.37,0)}
-  else c.slice(0,3).forEach(function(t,j){var p=pol(R*.47,[90,205,335][j]);s+=bubble(t,p[0],p[1]+R*.06,R*.33,0)});
+  else c.forEach(function(t,j){var p=centerPos(c.length,j,R);s+=bubble(t,p[0],p[1],p[2],0)});
   // anéis
-  for(i=1;i<4;i++){
+  for(i=1;i<N;i++){
     var ts=inRing(i),n=ts.length; if(!n)continue;
     var mid=b[i]-w[i]/2, r=Math.min(w[i]/2-8,ui.focus===i?70:46,mid*5.236/n/2*.92);
     r=Math.max(r,6);
@@ -749,7 +784,7 @@ function setFocus(i,keep){
     var k=Math.min(1,(t-t0)/420), e=k<.5?4*k*k*k:1-Math.pow(-2*k+2,3)/2;
     cur=from.map(function(v,j){return v+(to[j]-v)*e});
     drawCircles(cur);
-    if(k<1)anim=requestAnimationFrame(step);
+    if(k<1)anim=requestAnimationFrame(step);else drawStage();
   })(t0);
 }
 
@@ -798,16 +833,16 @@ function taskItem(t){
   s+='<button class="chk" data-act="done" data-id="'+t.id+'" aria-label="Concluir '+esc(t.title)+'"></button>';
   s+='<button class="ttl" data-act="open" data-id="'+t.id+'" aria-expanded="'+open+'"><span data-ttl="'+t.id+'">'+esc(t.title)+"</span></button>";
   if(t.due)s+='<span class="chip'+(dayDiff(t.due)<=0?" hot":"")+'">'+fmtDue(t.due)+"</span>";
-  s+='<span class="dot k'+t.ring+'" title="'+RINGS[t.ring].name+'"></span></div>';
+  s+='<span class="dot k'+t.ring+'" title="'+esc(rname(t.ring))+'"></span></div>';
   if(open){
     s+='<div class="edit">';
     s+='<label>Tarefa<input type="text" id="f-title-'+t.id+'" data-kind="t" data-field="title" data-id="'+t.id+'" value="'+esc(t.title)+'"></label>';
     s+='<label>Notas<textarea id="f-notes-'+t.id+'" data-kind="t" data-field="notes" data-id="'+t.id+'" placeholder="Detalhes, links, próximo passo…">'+esc(t.notes)+"</textarea></label>";
     s+='<label>Prazo<input type="date" id="f-due-'+t.id+'" data-kind="t" data-field="due" data-id="'+t.id+'" value="'+esc(t.due)+'"></label>';
     s+='<div class="btns"><button class="btn" data-act="in" data-id="'+t.id+'"'+(t.ring===0?" disabled":"")+">← Aproximar do centro</button>";
-    s+='<button class="btn" data-act="out" data-id="'+t.id+'"'+(t.ring===3?" disabled":"")+">Afastar →</button>";
+    s+='<button class="btn" data-act="out" data-id="'+t.id+'"'+(t.ring===N-1?" disabled":"")+">Afastar →</button>";
     s+='<button class="btn bad" data-act="del" data-id="'+t.id+'">Excluir</button></div>';
-    s+='<p class="desc">Está em <b>'+RINGS[t.ring].name+"</b>.</p></div>";
+    s+='<p class="desc">Está em <b>'+esc(rname(t.ring))+"</b>.</p></div>";
   }
   return s+"</li>";
 }
@@ -815,16 +850,43 @@ function exampleNote(){
   if(!state.examples)return "";
   return '<div class="note"><span>Estas tarefas e rotinas são exemplos para mostrar como funciona.</span><button class="btn" data-act="clearex">Limpar exemplos</button><button class="btn" data-act="keepex">Manter</button></div>';
 }
+function ringEditor(i){
+  var r=RINGS[i],open=ui.custom===i,c;
+  var s='<div class="btns"><button class="btn" data-act="custom" data-ring="'+i+'" aria-expanded="'+open+'">'+(open?"Fechar personalização":"Personalizar anel")+"</button></div>";
+  if(!open)return s;
+  s+='<div class="item open"><div class="edit" style="border-top:0;margin-top:0">';
+  s+='<label>Nome<input type="text" maxlength="24" id="g-name-'+i+'" data-kind="g" data-field="name" data-ring="'+i+'" value="'+esc(r.name)+'" placeholder="Anel '+(i+1)+'"></label>';
+  s+='<label>Descrição<input type="text" maxlength="120" id="g-desc-'+i+'" data-kind="g" data-field="desc" data-ring="'+i+'" value="'+esc(r.desc)+'" placeholder="Para que serve este anel"></label>';
+  s+='<p class="lab">Cor</p><div class="btns" role="group" aria-label="Cor do anel">';
+  for(c=0;c<6;c++)s+='<button class="sw" style="background:var(--r'+c+')" data-act="gcolor" data-ring="'+i+'" data-c="'+c+'" aria-pressed="'+(r.color===c)+'" title="'+PALNAME[c]+'" aria-label="'+PALNAME[c]+'"></button>';
+  s+="</div>";
+  if(i===0){
+    var cnt=inRing(0).length;
+    s+='<p class="lab">Quantas tarefas cabem no centro</p><div class="step"><button class="btn" data-act="maxc" data-d="-1"'+(MAXC<=Math.max(1,cnt)?" disabled":"")+' aria-label="Diminuir">−</button><b>'+MAXC+'</b><button class="btn" data-act="maxc" data-d="1"'+(MAXC>=5?" disabled":"")+' aria-label="Aumentar">+</button></div>';
+  }
+  s+='<div class="btns"><button class="btn" data-act="gadd" data-ring="'+i+'"'+(N>=6?" disabled":"")+">Novo anel depois deste</button>";
+  if(i>0)s+='<button class="btn bad" data-act="gdel" data-ring="'+i+'"'+(N<=2?" disabled":"")+">Remover este anel</button>";
+  s+='<button class="btn" data-act="greset">Restaurar o padrão</button></div>';
+  if(N>=6)s+='<p class="lab">O máximo são 6 anéis.</p>';
+  return s+"</div></div>";
+}
+function cfgChanged(){
+  useState();
+  inRing(0).slice(MAXC).forEach(function(t){t.ring=1});
+  if(ui.focus!==null)ui.focus=Math.min(ui.focus,N-1);
+  save();renderAll();
+}
 function panelCircles(){
   var s=exampleNote();
-  s+="<h2>"+(ui.focus===null?"Do centro para fora":RINGS[ui.focus].name+" em detalhe")+"</h2>";
-  for(var i=0;i<4;i++){
+  s+="<h2>"+(ui.focus===null?"Do centro para fora":esc(rname(ui.focus))+" em detalhe")+"</h2>";
+  for(var i=0;i<N;i++){
     var list=inRing(i),open=ui.focus===i;
-    s+='<section class="sec"><button class="sechead" data-act="focus" data-ring="'+i+'" aria-expanded="'+open+'"><span class="dot k'+i+'"></span><b>'+RINGS[i].name+'</b><span class="count">'+list.length+(i===0?" de "+MAXC:"")+'</span><span class="zoom">'+(open?"Reduzir":"Ampliar")+"</span></button>";
+    s+='<section class="sec"><button class="sechead" data-act="focus" data-ring="'+i+'" aria-expanded="'+open+'"><span class="dot k'+i+'"></span><b data-rname="'+i+'">'+esc(rname(i))+'</b><span class="count">'+list.length+(i===0?" de "+MAXC:"")+'</span><span class="zoom">'+(open?"Reduzir":"Ampliar")+"</span></button>";
     if(open){
-      s+='<p class="desc">'+RINGS[i].desc+"</p>";
+      if(RINGS[i].desc)s+='<p class="desc">'+esc(RINGS[i].desc)+"</p>";
+      s+=ringEditor(i);
       s+=list.length?'<ul class="list">'+list.map(taskItem).join("")+"</ul>":'<p class="none">Nada aqui por enquanto.</p>';
-      s+='<form class="add" data-form="add" data-ring="'+i+'"><input type="text" id="add-'+i+'" placeholder="Nova tarefa em '+RINGS[i].name+'" aria-label="Nova tarefa em '+RINGS[i].name+'"><button class="btn pri">Adicionar</button></form>';
+      s+='<form class="add" data-form="add" data-ring="'+i+'"><input type="text" id="add-'+i+'" placeholder="Nova tarefa em '+esc(rname(i))+'" aria-label="Nova tarefa em '+esc(rname(i))+'"><button class="btn pri">Adicionar</button></form>';
     }else if(list.length){
       s+='<p class="preview">'+list.map(function(t){return esc(t.title)}).join(" · ")+"</p>";
     }
@@ -895,6 +957,26 @@ document.addEventListener("click",function(e){
   var el=e.target.closest("[data-act]"); if(!el)return;
   var a=el.dataset.act,id=el.dataset.id,t,r;
   if(a==="view"){ui.view=el.dataset.v;ui.open=null;ui.openR=null;renderAll()}
+  else if(a==="custom"){var ci=+el.dataset.ring;ui.custom=ui.custom===ci?null:ci;drawPanel()}
+  else if(a==="gcolor"){state.rings[+el.dataset.ring].color=+el.dataset.c;cfgChanged()}
+  else if(a==="maxc"){state.maxc=Math.max(Math.max(1,inRing(0).length),Math.min(5,state.maxc+(+el.dataset.d)));cfgChanged()}
+  else if(a==="gadd"){
+    var gi=+el.dataset.ring; if(N>=6)return;
+    var used=state.rings.map(function(x){return x.color}),nc=[0,1,2,3,4,5].filter(function(x){return used.indexOf(x)<0})[0];
+    state.tasks.forEach(function(x){if(x.ring>gi)x.ring++});
+    state.rings.splice(gi+1,0,{name:"",desc:"",color:nc===undefined?(gi+1)%6:nc});
+    ui.custom=gi+1;ui.focus=gi+1;ui.open=null;cfgChanged();
+    toast("Anel criado. Dê um nome a ele.");
+  }
+  else if(a==="gdel"){
+    var di=+el.dataset.ring; if(di<1||N<=2)return;
+    var last=di===N-1;
+    state.tasks.forEach(function(x){if(x.ring>di||(x.ring===di&&last))x.ring--});
+    state.rings.splice(di,1);
+    ui.custom=null;ui.open=null;ui.focus=Math.min(di,N-2);cfgChanged();
+    toast("Anel removido. As tarefas dele foram para "+rname(ui.focus)+".");
+  }
+  else if(a==="greset"){state.rings=JSON.parse(JSON.stringify(DEF_RINGS));state.maxc=3;ui.custom=null;ui.open=null;cfgChanged();toast("Anéis de volta ao padrão.")}
   else if(a==="export"){doExport()}
   else if(a==="import"){$("imp").click()}
   else if(a==="pdf"){doPdf()}
@@ -935,12 +1017,18 @@ document.addEventListener("submit",function(e){
   var f=e.target.closest("[data-form]"); if(!f)return; e.preventDefault();
   var kind=f.dataset.form,inp=f.querySelector("input[type=text]"),v=inp.value;
   if(kind==="add"){if(addTask(v,+f.dataset.ring)){drawStage();drawPanel();var again=$("add-"+f.dataset.ring);if(again)again.focus()}}
-  else if(kind==="addcal"){if(addTask(v,ringForDue(ui.cal.sel),ui.cal.sel)){drawStage();drawPanel();toast("Adicionada em "+RINGS[ringForDue(ui.cal.sel)].name+".")}}
+  else if(kind==="addcal"){if(addTask(v,ringForDue(ui.cal.sel),ui.cal.sel)){drawStage();drawPanel();toast("Adicionada em "+rname(ringForDue(ui.cal.sel))+".")}}
   else if(kind==="addr"){v=v.trim();if(!v)return;var wd=parse(ui.cal.sel).getDay(),nr={id:uid(),title:v,start:$("add-r-time").value||"08:00",dur:30,days:[wd]};state.routines.push(nr);ui.openR=nr.id;save();drawStage();drawPanel()}
 });
 function onField(e,final){
   var el=e.target; if(!el.dataset||!el.dataset.field)return;
   var f=el.dataset.field,id=el.dataset.id;
+  if(el.dataset.kind==="g"){
+    var gi=+el.dataset.ring; if(final||!RINGS[gi])return;
+    RINGS[gi][f]=el.value; save(); drawStage();
+    if(f==="name")document.querySelectorAll('[data-rname="'+gi+'"]').forEach(function(n){n.textContent=rname(gi)});
+    return;
+  }
   if(el.dataset.kind==="t"){
     var t=task(id); if(!t)return;
     if(f==="due"){if(!final)return;t.due=el.value;save();drawStage();drawPanel();return}
