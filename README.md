@@ -1,7 +1,5 @@
 # Órbita
 
-[![Captura de tela do Órbita](docs/captura.png)](https://joaogabrielmontinirossi-sys.github.io/orbita/)
-
 Tarefas e rotinas em círculos concêntricos: o centro é o que importa agora, e os anéis de fora são o que pode esperar. Tem também um calendário circular com os dias do mês, as 24 horas do dia e as rotinas.
 
 - **Site:** https://joaogabrielmontinirossi-sys.github.io/orbita/
@@ -12,13 +10,9 @@ Tarefas e rotinas em círculos concêntricos: o centro é o que importa agora, e
 
 No app de Windows, o botão **Sincronização** grava o arquivo `orbita-sync.json` numa pasta do Google Drive a cada alteração. Outro computador com o Órbita e o mesmo Drive recebe tudo automaticamente; alterações feitas nos dois lados são mescladas item por item.
 
-No site e no celular os dados ficam só no navegador daquele aparelho.
+No site e no celular os dados ficam no navegador daquele aparelho. Para levá-los a outro aparelho, use **Exportar** (gera um arquivo `orbita-AAAA-MM-DD.json`; no celular abre o menu de compartilhar) e, no outro, **Importar**. A importação mescla com o que já existe: fica a versão mais recente de cada tarefa e rotina.
 
 ## Código
 
 - `index.html`, `sw.js`, `manifest.webmanifest`, `icons/`: o site publicado.
 - `src/orbita.html`: a fonte do app. `src/build.ps1` gera o site, os ícones e compila `src/windows/Orbita.cs` com o compilador C# que já vem no Windows.
-
-## Licença
-
-[MIT](LICENSE): pode usar, copiar, modificar e distribuir livremente, mantendo o aviso de autoria.
