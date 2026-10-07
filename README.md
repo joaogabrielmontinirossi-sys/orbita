@@ -18,6 +18,8 @@ No site e no celular os dados ficam no navegador daquele aparelho. Para levá-lo
 
 O botão **PDF** gera um resumo para quem não tem o app: os círculos com as tarefas numeradas, as listas de cada anel com notas e prazos, e a tabela de rotinas por dia da semana.
 
+Cada tarefa mostra a data e a hora em que foi adicionada e, depois, concluída. A lista de concluídas tem o botão **Exportar tabela (PDF)**, com tarefa, anel, adicionada, concluída e quanto tempo levou.
+
 ## Código
 
 - `index.html`, `sw.js`, `manifest.webmanifest`, `icons/`: o site publicado.
