@@ -1,5 +1,7 @@
 # Órbita
 
+[![Captura de tela do Órbita](docs/captura.png)](https://joaogabrielmontinirossi-sys.github.io/orbita/)
+
 Tarefas e rotinas em círculos concêntricos: o centro é o que importa agora, e os anéis de fora são o que pode esperar. Tem também um calendário circular com os dias do mês, as 24 horas do dia e as rotinas.
 
 - **Site:** https://joaogabrielmontinirossi-sys.github.io/orbita/
@@ -16,3 +18,7 @@ No site e no celular os dados ficam só no navegador daquele aparelho.
 
 - `index.html`, `sw.js`, `manifest.webmanifest`, `icons/`: o site publicado.
 - `src/orbita.html`: a fonte do app. `src/build.ps1` gera o site, os ícones e compila `src/windows/Orbita.cs` com o compilador C# que já vem no Windows.
+
+## Licença
+
+[MIT](LICENSE): pode usar, copiar, modificar e distribuir livremente, mantendo o aviso de autoria.
