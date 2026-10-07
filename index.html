@@ -179,6 +179,7 @@ form.add input[type=time]{flex:0 1 120px}
     <div class="btns" id="filebtns">
       <button class="btn" id="expbtn" data-act="export">Exportar</button>
       <button class="btn" id="impbtn" data-act="import">Importar</button>
+      <button class="btn" id="pdfbtn" data-act="pdf">PDF</button>
       <input type="file" id="imp" accept=".json,application/json" hidden>
       <button class="btn" id="syncbtn" data-act="synctoggle" hidden>Sincronização</button>
     </div>
@@ -358,17 +359,200 @@ function mergeRemote(remote){
 }
 /* ---------- exportar e importar arquivo: leva os dados de um aparelho a outro sem servidor ---------- */
 function exportData(){return JSON.stringify({app:"orbita",version:1,exported:Date.now(),tasks:state.tasks,routines:state.routines,log:state.log,logMod:state.logMod,tomb:state.tomb})}
-async function doExport(){
-  stamp();
-  var name="orbita-"+today()+".json",text=exportData();
-  try{ // no celular, abre o menu de compartilhar (salvar no Drive, enviar para si mesmo…)
-    var f=new File([text],name,{type:"application/json"});
+async function deliver(name,data,type){
+  if(window.claude&&window.claude.use){ // dentro do Claude, quem salva é a plataforma, com confirmação
+    var dl=null; try{dl=await window.claude.use("downloads")}catch(e){}
+    if(dl){
+      try{await dl.save({filename:name,data:new Blob([data],{type:type})});toast("Arquivo "+name+" salvo.")}
+      catch(e){if(!e||e.code!=="declined")toast("Não foi possível salvar o arquivo aqui.")}
+      return;
+    }
+  }
+  try{ // no celular, abre o menu de compartilhar (salvar no Drive, enviar para alguém…)
+    var f=new File([data],name,{type:type});
     if(window.matchMedia&&matchMedia("(pointer:coarse)").matches&&navigator.canShare&&navigator.canShare({files:[f]})){await navigator.share({files:[f],title:"Órbita"});return}
   }catch(e){if(e&&e.name==="AbortError")return}
-  var url=URL.createObjectURL(new Blob([text],{type:"application/json"})),a=document.createElement("a");
+  var url=URL.createObjectURL(new Blob([data],{type:type})),a=document.createElement("a");
   a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();
   setTimeout(function(){URL.revokeObjectURL(url)},10000);
   toast("Arquivo "+name+" salvo nos downloads.");
+}
+function doExport(){stamp();return deliver("orbita-"+today()+".json",exportData(),"application/json")}
+
+/* ---------- PDF para quem não tem o app: desenhado aqui mesmo, sem biblioteca ---------- */
+// larguras da Helvetica e da Helvetica-Bold (caracteres 32 a 126, em milésimos do corpo)
+var HW=[278,278,355,556,556,889,667,191,333,333,389,584,278,333,278,278,556,556,556,556,556,556,556,556,556,556,278,278,584,584,584,556,1015,667,667,722,722,667,611,778,722,278,500,667,556,833,722,778,667,778,722,667,611,722,667,944,667,667,611,278,278,278,469,556,333,556,556,500,556,556,278,556,556,222,222,500,222,833,556,556,556,556,333,500,278,556,500,722,500,500,500,334,260,334,584];
+var HB=[278,333,474,556,556,889,722,238,333,333,389,584,278,333,278,278,556,556,556,556,556,556,556,556,556,556,333,333,584,584,584,611,975,722,722,722,722,667,611,778,722,278,556,722,611,833,722,778,667,778,722,667,611,722,667,944,667,667,611,333,278,333,584,556,333,556,611,556,611,556,333,611,611,278,278,556,278,889,611,611,611,611,389,556,333,611,556,778,556,556,500,389,280,389,584];
+var WIN={"–":150,"—":151,"…":133,"•":149,"‘":145,"’":146,"“":147,"”":148,"€":128};
+function toWin(s){ // o PDF usa a codificação WinAnsi; o que não existe nela é aproximado ou descartado
+  var out="";
+  Array.from(String(s)).forEach(function(ch){
+    var c=ch.codePointAt(0);
+    if((c>=32&&c<127)||(c>=160&&c<256))out+=ch;
+    else if(WIN[ch])out+=String.fromCharCode(WIN[ch]);
+    else{var b=ch.normalize("NFD").charCodeAt(0);if(b>=32&&b<127)out+=String.fromCharCode(b)}
+  });
+  return out;
+}
+function textW(win,size,bold,sp){
+  var t=bold?HB:HW,w=0;
+  for(var i=0;i<win.length;i++){
+    var c=win.charCodeAt(i);
+    if(c>=32&&c<127)w+=t[c-32];
+    else if(c===133)w+=1000;
+    else if(c===183||c===160)w+=278;
+    else{var b=win.charAt(i).normalize("NFD").charCodeAt(0);w+=(b>=32&&b<127)?t[b-32]:556}
+  }
+  return w*size/1000+(sp||0)*win.length;
+}
+function wrapW(s,maxW,size,bold,maxLines){
+  var words=toWin(s).split(/\s+/).filter(Boolean),lines=[],cur="";
+  words.forEach(function(w){
+    while(textW(w,size,bold)>maxW&&w.length>1){ // palavra maior que a linha: quebra no meio
+      var k=w.length-1;while(k>1&&textW(w.slice(0,k),size,bold)>maxW)k--;
+      if(cur){lines.push(cur);cur=""}
+      lines.push(w.slice(0,k));w=w.slice(k);
+    }
+    var n=cur?cur+" "+w:w;
+    if(textW(n,size,bold)<=maxW)cur=n;else{if(cur)lines.push(cur);cur=w}
+  });
+  if(cur)lines.push(cur);
+  if(maxLines&&lines.length>maxLines){
+    lines=lines.slice(0,maxLines);var l=lines[maxLines-1];
+    while(l.length>1&&textW(l+"\x85",size,bold)>maxW)l=l.slice(0,-1);
+    lines[maxLines-1]=l+"\x85";
+  }
+  return lines;
+}
+function makePdf(){
+  var W=595.28,H=841.89,M=48,INK="#16202B",MUT="#5A6876",LINE="#D2D9E0",RC=["#DD4F27","#D9921F","#23917F","#566FB3"];
+  var pages=[],ops,y;
+  function n(v){return String(Math.round(v*100)/100)}
+  function rgb(hex){var v=parseInt(hex.slice(1),16);return [(v>>16)/255,(v>>8&255)/255,(v&255)/255]}
+  function col(hex,op){var c=rgb(hex);return n(c[0])+" "+n(c[1])+" "+n(c[2])+" "+op+" "}
+  function tint(hex,p){return "#"+rgb(hex).map(function(x){return Math.round((x*p+1-p)*255).toString(16).padStart(2,"0")}).join("")}
+  function circle(x,yy,r,fill,stroke,lw){
+    var k=r*.5523,Y=H-yy,s="";
+    function cv(a,b,c,d,e,f){return n(a)+" "+n(b)+" "+n(c)+" "+n(d)+" "+n(e)+" "+n(f)+" c "}
+    if(fill)s+=col(fill,"rg"); if(stroke)s+=col(stroke,"RG")+n(lw||1)+" w ";
+    s+=n(x+r)+" "+n(Y)+" m "+cv(x+r,Y+k,x+k,Y+r,x,Y+r)+cv(x-k,Y+r,x-r,Y+k,x-r,Y)+cv(x-r,Y-k,x-k,Y-r,x,Y-r)+cv(x+k,Y-r,x+r,Y-k,x+r,Y);
+    ops.push(s+(fill&&stroke?"b":fill?"f":"s"));
+  }
+  function rule(yy){ops.push(col(LINE,"RG")+"0.8 w "+n(M)+" "+n(H-yy)+" m "+n(W-M)+" "+n(H-yy)+" l S")}
+  function text(x,yy,str,size,bold,color,align,sp,raw){
+    var w=raw?str:toWin(str),tw=textW(w,size,bold,sp);
+    if(align==="c")x-=tw/2; else if(align==="r")x-=tw;
+    ops.push("BT "+col(color||INK,"rg")+"/F"+(bold?2:1)+" "+n(size)+" Tf "+n(sp||0)+" Tc "+n(x)+" "+n(H-yy)+" Td ("+w.replace(/([\\()])/g,"\\$1")+") Tj ET");
+    return tw;
+  }
+  function newPage(){ops=[];pages.push(ops);y=M+14}
+  function need(h){if(y+h>H-58)newPage()}
+  function dueLabel(s){var d=parse(s),k=dayDiff(s),base=d.getDate()+" "+MES3[d.getMonth()];return k<0?"atrasada · "+base:k===0?"hoje · "+base:k===1?"amanhã · "+base:base}
+
+  var rings=[0,1,2,3].map(inRing),num={},count=0,td=new Date();
+  rings.forEach(function(l){l.forEach(function(t){num[t.id]=++count})});
+
+  // cabeçalho com a logo
+  newPage();
+  var lx=M+17,ly=66;
+  [[16.5,1.4,"#566FB3",-40,2.7],[11.5,1.7,"#23917F",150,2.3],[6.6,2,"#D9921F",45,1.9]].forEach(function(r){
+    circle(lx,ly,r[0],null,r[2],r[1]);
+    var p=pol(r[0],r[3]);circle(lx+p[0],ly+p[1],r[4]+1,"#FFFFFF");circle(lx+p[0],ly+p[1],r[4],r[2]);
+  });
+  circle(lx,ly,3.2,RC[0]);
+  text(M+44,71,"Órbita",23,true);
+  text(M+44,85,"O centro é o agora. O resto pode esperar.",9.5,false,MUT);
+  text(W-M,66,td.getDate()+" de "+MES[td.getMonth()]+" de "+td.getFullYear(),10.5,true,INK,"r");
+  text(W-M,80,count+(count===1?" tarefa aberta":" tarefas abertas")+" · "+state.routines.length+(state.routines.length===1?" rotina":" rotinas"),9,false,MUT,"r");
+  rule(102);
+
+  // os círculos, com cada tarefa numerada
+  var R=150,cx=W/2,cy=102+26+R,b=[],acc=0,i;
+  for(i=0;i<4;i++){acc+=BASE[i]/450*R;b.push(acc)}
+  for(i=3;i>=0;i--)circle(cx,cy,b[i],tint(RC[i],[.3,.24,.18,.14][i]),"#FFFFFF",1.6);
+  for(i=0;i<4;i++)text(cx,cy-b[i]+(i?10.5:11.5),(RINGS[i].name+(i?" · "+rings[i].length:"")).toUpperCase(),i?6.2:5.6,true,INK,"c",.7);
+  function dot(t,x,yy,r,k){
+    circle(x,yy,r,"#FFFFFF",RC[k],1.2);
+    if(r>=5){var s=r>=7?7:5.6;text(x,yy+s*.36,String(num[t.id]),s,true,INK,"c")}
+  }
+  var c=rings[0],r0=b[0];
+  if(c.length===1)dot(c[0],cx,cy+5,8,0);
+  else if(c.length===2){dot(c[0],cx-r0*.42,cy+5,8,0);dot(c[1],cx+r0*.42,cy+5,8,0)}
+  else c.slice(0,3).forEach(function(t,j){var p=pol(r0*.5,[90,205,335][j]);dot(t,cx+p[0],cy+p[1]+4,7.5,0)});
+  for(i=1;i<4;i++){
+    var ts=rings[i],q=ts.length,mid=b[i]-(b[i]-b[i-1])/2,rr=Math.max(2.5,Math.min(8,mid*5.236/Math.max(q,1)/2*.88));
+    ts.forEach(function(t,j){var p=pol(mid,-60+300*(j+.5)/q);dot(t,cx+p[0],cy+p[1],rr,i)});
+  }
+  y=cy+R+34;
+
+  // as listas, do centro para fora
+  var TW=W-2*M-28-96;
+  for(i=0;i<4;i++){
+    need(58);
+    circle(M+5,y-4.3,5,RC[i]);
+    var hw=text(M+18,y,RINGS[i].name,13,true);
+    text(M+26+hw,y,rings[i].length+(rings[i].length===1?" tarefa":" tarefas"),9,false,MUT);
+    y+=9;rule(y);y+=18;
+    if(!rings[i].length){text(M+18,y,"Nada aqui por enquanto.",9.5,false,MUT);y+=16}
+    rings[i].forEach(function(t){
+      var tl=wrapW(t.title||"(sem título)",TW,10.5,false,3),nl=t.notes?wrapW(t.notes,TW,8.5,false,4):[];
+      need(tl.length*13.5+nl.length*11+8);
+      circle(M+8,y-3.6,7,"#FFFFFF",RC[i],1.1);
+      text(M+8,y-1.1,String(num[t.id]),7,true,INK,"c");
+      if(t.due){var hot=dayDiff(t.due)<=0;text(W-M,y,dueLabel(t.due),9,hot,hot?RC[0]:MUT,"r")}
+      tl.forEach(function(l){text(M+26,y,l,10.5,false,INK,"l",0,true);y+=13.5});
+      nl.forEach(function(l){text(M+26,y-1,l,8.5,false,MUT,"l",0,true);y+=11});
+      y+=6;
+    });
+    y+=12;
+  }
+
+  // rotinas: horário, nome e uma bolinha por dia da semana
+  if(state.routines.length){
+    var rs=state.routines.slice().sort(function(a,z){return toMin(a.start)-toMin(z.start)});
+    var dx=function(d){return W-M-6-(6-d)*17};
+    need(70);
+    text(M,y,"Rotinas",14,true);
+    for(i=0;i<7;i++)text(dx(i),y,DIA1[i],7.5,true,MUT,"c");
+    y+=9;rule(y);y+=19;
+    rs.forEach(function(r,j){
+      need(19);
+      var st=toMin(r.start);
+      text(M,y,r.start+"–"+hm(st+(+r.dur||0)),9.5,false,MUT);
+      text(M+84,y,wrapW(r.title||"(sem título)",W-2*M-84-136,10.5,false,1)[0]||"",10.5,false,INK,"l",0,true);
+      for(var d=0;d<7;d++){if(r.days.indexOf(d)>=0)circle(dx(d),y-3.5,4.2,RC[2]);else circle(dx(d),y-3.5,3.8,null,LINE,.9)}
+      y+=19;
+    });
+  }
+
+  // monta o arquivo
+  var objs=[],kids=[];
+  pages.forEach(function(p,k){
+    ops=p;
+    text(M,H-34,"Feito com o Órbita · joaogabrielmontinirossi-sys.github.io/orbita",8,false,MUT);
+    text(W-M,H-34,"página "+(k+1)+" de "+pages.length,8,false,MUT,"r");
+    var body=p.join("\n"),pid=5+2*k;
+    kids.push(pid+" 0 R");
+    objs[pid]="<< /Type /Page /Parent 2 0 R /MediaBox [0 0 "+n(W)+" "+n(H)+"] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents "+(pid+1)+" 0 R >>";
+    objs[pid+1]="<< /Length "+body.length+" >>\nstream\n"+body+"\nendstream";
+  });
+  objs[1]="<< /Type /Catalog /Pages 2 0 R >>";
+  objs[2]="<< /Type /Pages /Kids ["+kids.join(" ")+"] /Count "+pages.length+" >>";
+  objs[3]="<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>";
+  objs[4]="<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>";
+  var out="%PDF-1.4\n%\xE2\xE3\xCF\xD3\n",offs=[],k;
+  for(k=1;k<objs.length;k++){offs[k]=out.length;out+=k+" 0 obj\n"+objs[k]+"\nendobj\n"}
+  var xref=out.length;
+  out+="xref\n0 "+objs.length+"\n0000000000 65535 f \n";
+  for(k=1;k<objs.length;k++)out+=String(offs[k]).padStart(10,"0")+" 00000 n \n";
+  out+="trailer\n<< /Size "+objs.length+" /Root 1 0 R /Info << /Title (Orbita) /Producer (Orbita) >> >>\nstartxref\n"+xref+"\n%%EOF\n";
+  var bytes=new Uint8Array(out.length);
+  for(k=0;k<out.length;k++)bytes[k]=out.charCodeAt(k)&255;
+  return bytes;
+}
+function doPdf(){
+  try{return deliver("orbita-"+today()+".pdf",makePdf(),"application/pdf")}
+  catch(e){toast("Não foi possível gerar o PDF.")}
 }
 function importText(text){
   var d;
@@ -713,6 +897,7 @@ document.addEventListener("click",function(e){
   if(a==="view"){ui.view=el.dataset.v;ui.open=null;ui.openR=null;renderAll()}
   else if(a==="export"){doExport()}
   else if(a==="import"){$("imp").click()}
+  else if(a==="pdf"){doPdf()}
   else if(a==="synctoggle"){Sync.show=!Sync.show;drawSync()}
   else if(a==="syncnow"){syncNow(true)}
   else if(a==="syncoff"){syncConfig("sync/config","off")}
@@ -775,8 +960,6 @@ $("imp").addEventListener("change",function(){
   var f=this.files&&this.files[0],inp=this; if(!f)return;
   f.text().then(importText,function(){toast("Não foi possível ler o arquivo.")}).then(function(){inp.value=""});
 });
-// dentro do Claude a página não pode salvar arquivos; lá os dados já ficam na conta
-if(window.claude){$("expbtn").hidden=true;$("impbtn").hidden=true}
 setInterval(function(){if(ui.view==="cal"&&!document.hidden)drawCal()},60000);
 
 snapshot();
