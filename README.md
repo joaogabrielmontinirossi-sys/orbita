@@ -2,6 +2,12 @@
 
 Tarefas e rotinas em círculos concêntricos: o centro é o que importa agora, e os anéis de fora são o que pode esperar. Tem também um calendário circular com os dias do mês, as 24 horas do dia e as rotinas.
 
+![Os anéis do Órbita, do Agora ao Pode esperar](screenshots/circulos.png)
+
+| Um anel ampliado | Calendário circular |
+| --- | --- |
+| ![Anel Hoje ampliado, com uma tarefa aberta](screenshots/anel.png) | ![Calendário circular com dias, horas e rotinas](screenshots/calendario.png) |
+
 - **Site:** https://joaogabrielmontinirossi-sys.github.io/orbita/
 - **Celular:** abra o site no navegador do celular e escolha "Adicionar à tela inicial" (Android: menu ⋮ do Chrome; iPhone: botão Compartilhar do Safari). Funciona sem internet depois da primeira abertura.
 - **Windows:** baixe o `Orbita.exe` na página de [Releases](https://github.com/joaogabrielmontinirossi-sys/orbita/releases). Ele abre o app numa janela própria e usa o Microsoft Edge que já vem no Windows.
