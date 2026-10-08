@@ -207,6 +207,7 @@ form.add input[type=time]{flex:0 1 120px}
 </div>
 <div id="toast" role="status"></div>
 
+<script src="gsync.js" data-app="orbita"></script>
 <script>
 (function(){
 "use strict";
@@ -343,6 +344,7 @@ function stamp(){
   Object.keys(prev).forEach(function(k){if(!seen[k]){if(k.charAt(0)!=="l")state.tomb[k]=nowTs;delete prev[k]}});
 }
 function baseStatus(){
+  if(window.GSyncLib&&window.GSyncLib.on())return Sync.error?"Falha ao sincronizar: "+Sync.error:"Sincronizado com a conta Google";
   if(Sync.avail)return Sync.on?(Sync.error?"Falha ao sincronizar: "+Sync.error:"Sincronizado com o Google Drive"):"Salvo neste computador";
   return store.doc?"Salvo na sua conta":"Salvo neste navegador";
 }
@@ -351,10 +353,11 @@ function persist(){
   try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}
   if(store.doc){setStatus("Salvando…");clearTimeout(timer);timer=setTimeout(flush,700)}
 }
-function save(){stamp();persist();if(Sync.on)syncSoon()}
+function save(){stamp();persist();if(Sync.on||GSync.on())syncSoon()}
 
 /* ---------- sincronização com uma pasta do Google Drive (só no app de Windows) ---------- */
 var Sync={avail:false,on:false,folder:"",drives:[],busy:false,again:false,last:0,error:"",show:false},syncT=null;
+var GSync=window.GSyncLib||{web:false,on:function(){return false},io:null,html:function(){return ""},off:function(){},onChange:null};
 function api(path,opt){return fetch("api/"+path,Object.assign({cache:"no-store"},opt||{},{headers:{"X-Orbita":"1"}}))}
 async function syncInfo(r){
   try{
@@ -649,17 +652,17 @@ function importText(text){
     state.tasks=state.tasks.filter(function(x){return !x.ex});state.routines=state.routines.filter(function(x){return !x.ex});state.examples=false;
   }
   var n=mergeRemote(d);
-  snapshot();persist();if(Sync.on)syncSoon();
+  snapshot();persist();if(Sync.on||GSync.on())syncSoon();
   ui.open=null;ui.openR=null;renderAll();
   toast(n?"Importado: "+n+(n===1?" item novo ou atualizado.":" itens novos ou atualizados."):"Importado: este aparelho já tinha tudo o que está no arquivo.");
 }
 
 async function syncNow(manual){
-  if(!Sync.on)return;
+  if(!Sync.on&&!GSync.on())return;
   if(Sync.busy){Sync.again=true;return}
   Sync.busy=true;
   try{
-    var r=await api("sync"); if(!r.ok)throw new Error("não foi possível ler a pasta");
+    var r=await (Sync.on?api("sync"):GSync.io()); if(!r.ok)throw new Error("não foi possível ler a pasta");
     var text=r.status===200?await r.text():"",remote=text.trim()?JSON.parse(text):null,pulled=0;
     if(remote&&remote.app==="orbita"){
       if(!state.syncedOnce&&state.examples){ // aparelho novo: troca os exemplos pelo que já está no Drive
@@ -672,7 +675,7 @@ async function syncNow(manual){
     if(pulled){snapshot();stamp();persist()}
     var localText=exportData(),local=JSON.parse(localText);
     if(!remote||syncSig(remote)!==syncSig(local)){
-      var w=await api("sync",{method:"POST",body:localText});
+      var w=await (Sync.on?api("sync",{method:"POST",body:localText}):GSync.io({method:"POST",body:localText}));
       if(!w.ok)throw new Error("não foi possível gravar na pasta");
     }
     Sync.last=Date.now();Sync.error="";
@@ -698,8 +701,9 @@ async function syncConfig(route,body){
   if(Sync.on)await syncNow(true); else{setStatus(baseStatus());drawSync()}
 }
 function drawSync(){
-  $("syncbtn").hidden=!Sync.avail;
-  var box=$("syncbox"); box.hidden=!(Sync.avail&&Sync.show); if(box.hidden)return;
+  $("syncbtn").hidden=!(Sync.avail||GSync.web);
+  var box=$("syncbox"); box.hidden=!((Sync.avail||GSync.web)&&Sync.show); if(box.hidden)return;
+  if(!Sync.avail){box.innerHTML=GSync.html({h:"h3",btn:"btn",pri:"btn pri"});return}
   var s="<h3>Sincronização com o Google Drive</h3>";
   if(Sync.on){
     s+="<p>Ativa em <b>"+esc(Sync.folder)+"</b>"+(Sync.error?" · falhou: "+esc(Sync.error):Sync.last?" · última vez às "+new Date(Sync.last).toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"}):"")+"</p>";
@@ -716,10 +720,11 @@ function drawSync(){
 }
 async function syncInit(){
   if(!/^https?:$/.test(location.protocol))return;
-  await syncInfo(); if(!Sync.avail)return;
+  await syncInfo(); if(!Sync.avail&&!GSync.web)return;
+  GSync.onChange=function(){syncNow(true)};
   setStatus(baseStatus());drawSync();
   await syncNow();
-  setInterval(function(){if(Sync.on)syncNow();else api("ping").catch(function(){})},30000);
+  setInterval(function(){if(Sync.on||GSync.on())syncNow();else if(Sync.avail)api("ping").catch(function(){})},30000);
   window.addEventListener("focus",function(){syncNow()});
 }
 function flush(){
