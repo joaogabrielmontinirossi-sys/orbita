@@ -1112,7 +1112,7 @@ setInterval(function(){if(ui.view==="cal"&&!document.hidden)drawCal()},60000);
 snapshot();
 renderAll();
 connect();
-window.OrbitaAPI={tasks:function(){return state.tasks},save:function(){save();drawStage();drawPanel()},add:function(o){var ts=Date.now(),t={id:o.id||uid(),title:String(o.title||""),notes:String(o.notes||""),ring:2,due:o.due||"",done:false,doneAt:0,created:ts,placed:ts};state.tasks.push(t);return t},open:function(id){if(!task(id))return;ui.view="circles";ui.open=id;drawStage();drawPanel()}};
+window.OrbitaAPI={routines:function(){return state.routines},openR:function(id){if(!routine(id))return;ui.view="cal";ui.openR=id;drawStage();drawPanel()},tasks:function(){return state.tasks},save:function(){save();drawStage();drawPanel()},add:function(o){var ts=Date.now(),t={id:o.id||uid(),title:String(o.title||""),notes:String(o.notes||""),ring:2,due:o.due||"",done:false,doneAt:0,created:ts,placed:ts};state.tasks.push(t);return t},open:function(id){if(!task(id))return;ui.view="circles";ui.open=id;drawStage();drawPanel()}};
 syncInit();
 try{if("serviceWorker" in navigator&&/^https?:$/.test(location.protocol)&&!window.claude&&location.hostname!=="127.0.0.1")navigator.serviceWorker.register("sw.js").catch(function(){})}catch(e){}
 })();
